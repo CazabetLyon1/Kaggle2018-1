@@ -1,0 +1,6 @@
+.project
+.settings
+.log
+*.py[cod]
+
+.idea/
