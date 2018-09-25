@@ -1,14 +1,60 @@
 import random
-
 import numpy
+
 from Tools.DataSet import DataSet
-from OutputFormatter import DecimalDigitMapping
+from Tools.Plotting import plot_images_test_results, plot_images_predictions
+from InputFormatter import to_drawable_images
+from Predictions import TestPredictions, Predictions
 
 from InputFormatter import to_normalized_images as input_formatter
 from Models import mlp1D1_initializer as model_initializer
-from Tools.Plotting import plot_images_test_results
+from OutputFormatter import DecimalDigitMapping
 
-numpy.random.seed(7)  # Fix a random seed for reproducibility
+numpy.random.seed(7)       # Fix a random seed for reproducibility <!Data augmentation will ruin that effort!>
+plot_correct_img_qt = 4    # The amount of correct predictions to plot during visual_confirmation
+plot_incorrect_img_qt = 4  # The amount of incorrect predictions to plot during visual_confirmation
+
+
+# Plot some (random pool) of the predictions (param)
+def visual_confirmation(predictions):
+    if isinstance(predictions, TestPredictions):
+        # Split corrections to correct/incorrect ones
+        correct_predictions = predictions.get_correct()
+        incorrect_predictions = predictions.get_incorrect()
+
+        # Ensure valid pool size
+        correct_qt = plot_correct_img_qt if plot_correct_img_qt < len(correct_predictions) \
+            else len(correct_predictions)
+        incorrect_qt = plot_incorrect_img_qt if plot_incorrect_img_qt < len(incorrect_predictions) \
+            else len(incorrect_predictions)
+
+        # Pick indices in pools
+        correct_indices = random.sample(range(len(correct_predictions)), correct_qt)
+        incorrect_indices = random.sample(range(len(incorrect_predictions)), incorrect_qt)
+
+        # Pick predictions
+        predictions = correct_predictions.filter_by_indices(correct_indices) \
+                    + incorrect_predictions.filter_by_indices(incorrect_indices)
+
+        # Plot predictions
+        plot_images_test_results(to_drawable_images(predictions.images),
+                                 predictions.expected,
+                                 predictions.results)
+    elif isinstance(predictions, Predictions):
+        # Compute expected plot size
+        indices_qt = plot_correct_img_qt + plot_incorrect_img_qt
+        # Ensure valid pool size
+        indices_qt = indices_qt if indices_qt < len(predictions) else len(predictions)
+        # Pick indices in pool
+        indices = random.sample(range(len(predictions)), indices_qt)
+        # Pick predictions
+        predictions = predictions.filter_by_indices(indices)
+
+        # Plot predictions
+        plot_images_predictions(to_drawable_images(predictions.images), predictions.results)
+
+    else:
+        pass  # TODO handle type error
 
 
 def main():
@@ -37,32 +83,7 @@ def main():
     scores = model.evaluate(encoded_dataset.test_images, encoded_dataset.test_labels, verbose=0)
     print("Baseline Error: %.2f%%" % (100 - scores[1] * 100))
 
-    # Execute a random test of 8 numbers and plot it
-    test_random_numbers(model, output_mapping, dataset, encoded_dataset, 8)
-
     del output_mapping
-
-
-def test_random_numbers(model, output_mapping, dataset, encoded_dataset, numbers_qt=8, plot_result=True):
-    # Random selection to plot for final approval
-    samples_qt = numbers_qt if numbers_qt <= len(dataset.test_images) else len(dataset.test_images)
-    samples_indexes = random.sample(range(len(dataset.test_images)), samples_qt)
-
-    # Predicting the random selection
-    results = [output_mapping.to_label(model.predict(numpy.array([encoded_dataset.test_images[i]]))[0])
-               for i in samples_indexes]
-
-    if plot_result:
-        # Plotting the random selection results
-        plot_images_test_results([dataset.test_images[i] for i in samples_indexes],
-                                  [output_mapping.to_label(encoded_dataset.test_labels[i]) for i in samples_indexes],
-                                  results)
-    else:
-        # Print result in console
-        print("Results of {0} random tests".format(samples_qt))
-        for i, idx in enumerate(samples_indexes):
-            print("Expected {0} | Predicted {1}".format(output_mapping.to_label(encoded_dataset.test_labels[idx]),
-                                                        results[i]))
 
 
 if __name__ == '__main__':
