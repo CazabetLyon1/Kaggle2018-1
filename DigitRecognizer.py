@@ -1,32 +1,35 @@
 import random
-
 import numpy
-from Tools.DataSet import DataSet
-from OutputFormatter import DecimalDigitMapping
 
+from Tools.DataSet import DataSet
 from InputFormatter import to_normalized_images as input_formatter
 from Models import mlp1D1_initializer as model_initializer
 from Tools.Plotting import plot_numbers_test_results
+
+from Data.Challenge1 import DataIO                                  # Challenge1 data loading & saving
+from OutputFormatter import DecimalDigitMapping as OutputMapping    # [0...9] Categorical encoder (for output mapping)
 
 numpy.random.seed(7)  # Fix a random seed for reproducibility
 
 
 def main():
-    # load the dataset
-    dataset = DataSet.load_from_csv('Data/challenge_digits', 0.2)
-    pixels_qt = dataset.train_images.shape[1]
+    cat_mapping = OutputMapping()                               # Create an output encoder/decoder
+    images, labels = DataIO.load_training_data()                # Load the data
+    dataset = DataSet(*DataSet.split_set(images, labels, 0.2))  # Instantiate the DataSet
 
-    output_mapping = DecimalDigitMapping()  # Create an output digits encoder/decoder
 
     # Encode output (the input is already in the good format)
     # TODO Find a way to spread the charge for output fct! (pool worker w\ multiprocessing? matrix solving w\ numpy?)
     encoded_dataset = dataset.encode(labels_encoding_fct=lambda labels: numpy.array([output_mapping.to_category(label)
                                                                                      for label in labels]))
 
+    # Compute the quantity of pixels
+    pixels_qt = encoded_dataset.train_images.shape[1] * encoded_dataset.train_images.shape[2]
+
     # Rebuild image for drawing later
     dataset = dataset.encode(images_encoding_fct=lambda images: input_formatter(images)*255)
 
-    model = model_initializer(pixels_qt, output_mapping.labels_qt)  # build the model
+    model = model_initializer(pixels_qt, cat_mapping.labels_qt)  # build the model
 
     # Fit the model
     model.fit(encoded_dataset.train_images, encoded_dataset.train_labels,
@@ -38,9 +41,9 @@ def main():
     print("Baseline Error: %.2f%%" % (100 - scores[1] * 100))
 
     # Execute a random test of 8 numbers and plot it
-    test_random_numbers(model, output_mapping, dataset, encoded_dataset, 8)
+    test_random_numbers(model, cat_mapping, dataset, encoded_dataset, 8)
 
-    del output_mapping
+    del cat_mapping
 
 
 def test_random_numbers(model, output_mapping, dataset, encoded_dataset, numbers_qt=8, plot_result=True):
