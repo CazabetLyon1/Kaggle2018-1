@@ -15,7 +15,7 @@ def plot_images(images, max_column_qt=DEFAULT_MAX_COLUMN_QT):
     for i in range(len(images)):
         plt.subplot(row_qt, column_qt, i+1)               # Add a subplot
         plt.axis('off')                                   # Disable the drawing of the axes
-        plt.imshow(images[i], cmap=plt.get_cmap('gray'))  # Associate the subplot with a number
+        plt.imshow(images[i], cmap=plt.get_cmap('gray'))  # Set the image
 
     plt.show()  # Show the plot
 
