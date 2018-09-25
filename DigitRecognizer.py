@@ -6,7 +6,7 @@ from OutputFormatter import DecimalDigitMapping
 
 from InputFormatter import to_normalized_images as input_formatter
 from Models import mlp1D1_initializer as model_initializer
-from Tools.Plotting import plot_numbers_test_results
+from Tools.Plotting import plot_images_test_results
 
 numpy.random.seed(7)  # Fix a random seed for reproducibility
 
@@ -54,7 +54,7 @@ def test_random_numbers(model, output_mapping, dataset, encoded_dataset, numbers
 
     if plot_result:
         # Plotting the random selection results
-        plot_numbers_test_results([dataset.test_images[i] for i in samples_indexes],
+        plot_images_test_results([dataset.test_images[i] for i in samples_indexes],
                                   [output_mapping.to_label(encoded_dataset.test_labels[i]) for i in samples_indexes],
                                   results)
     else:
