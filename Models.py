@@ -42,12 +42,10 @@ def mlp1D2_initializer(pixels_qt, classes_qt):
 # Input shape  : (sqrt(pixels_qt), sqrt(pixels_qt),)
 # Output shape : (classes_qt,)
 def cnn2D1_initializer(pixels_qt, classes_qt):
-    print(pixels_qt)
     i = math.sqrt(pixels_qt)
     if i != int(i):
         raise ValueError('pixels_vectors do not correspond to a square image')
     i = int(i)
-    print(i)
     model = Sequential()  # Instantiate model
 
     # Convolution input layer
