@@ -6,7 +6,7 @@ path = 'Data/Challenge1/'
 
 # Load a training set from the Kaggle challenge .csv file
 # Challenge link : https://www.kaggle.com/c/digit-recognizer
-# Return.shape : (?, 784,), (?,)  TODO Print shape
+# Return.shape : (42000, 784,), (42000,)
 def load_training_data():
     read = pandas.read_csv('{0}train.csv'.format(path))  # Load the csv
     labels = numpy.array(read["label"])                  # Extract all labels
