@@ -1,0 +1,3 @@
+Small multi layer perceptron neural network with four dense layers
+Input shape  : (784,)
+Output shape : (10,)
