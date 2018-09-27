@@ -1,23 +1,28 @@
 import random
 import functools
 import numpy
-from keras.models import load_model
+
 from keras.preprocessing.image import ImageDataGenerator
 from keras.callbacks import ReduceLROnPlateau
-
+from keras.models import load_model as k_load_model
 
 from Tools.DataSet import DataSet
 from Tools.Plotting import plot_images_test_results, plot_images_predictions
 from InputFormatter import to_drawable_images
 from Predictions import TestPredictions, Predictions
+from Models.ModelIO import load_model, save_model
 
 
 # Customizable import statements
 from Data.Challenge1 import DataIO                                  # Challenge1 data loading & saving
 from InputFormatter import to_normalized_images as input_formatter  # Format inputs to 0<=(n, 28, 28,)<=1
-from Models import cnn2D1_initializer as model_initializer          # Model used
 from OutputFormatter import DecimalDigitMapping as OutputMapping    # [0...9] Categorical encoder (for output mapping)
 
+from Models.Challenge1.CNN2D_1 import Compiler                      # Import a compiler for the model
+model_name = 'Challenge1/CNN2D_1'
+network_name = 'Main'
+load_network = False
+save_network = True
 
 numpy.random.seed(7)       # Fix a random seed for reproducibility <!Data augmentation will ruin that effort!>
 plot_correct_img_qt = 4    # The amount of correct predictions to plot during visual_confirmation
@@ -153,11 +158,10 @@ def main():
                                      labels_encoding_fct=lambda labels: numpy.array([cat_mapping.to_category(label)
                                                                                      for label in labels]))
 
-    # Compute the quantity of pixels
-    pixels_qt = encoded_dataset.train_images.shape[1] * encoded_dataset.train_images.shape[2]
+    load_name = network_name if load_network else None                      # Loading network or not ?
+    nn = load_model('Models/{}/'.format(model_name), load_name)             # Load the model
+    nn = Compiler.compile_model(nn)                                         # Compile the model
 
-    #nn = load_model('Networks/main_network.h5')                             # Load the model
-    nn = model_initializer(pixels_qt, cat_mapping.labels_qt)                # Compile the model
     train_model(nn, encoded_dataset, 50, 2048, True, True)                  # Train the model
     evaluate(nn, encoded_dataset.test_images, encoded_dataset.test_labels)  # Evaluate the model
 
@@ -172,8 +176,9 @@ def main():
     visual_confirmation(predictions)                                           # Plot sample of predictions
 
     DataIO.save_submission(predictions.results)  # Save the result into the correct submission format
-    #nn.save("Networks/main_network.h5")          # Save the model
 
+    if save_network:
+        save_model(nn, 'Models/{}/'.format(model_name), network_name)  # Save model + (opt) network
 
 # Use python shell/script w/ import statement to avoid jumping to the process entry point
 if __name__ == '__main__':

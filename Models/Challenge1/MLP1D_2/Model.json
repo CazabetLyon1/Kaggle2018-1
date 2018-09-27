@@ -1,0 +1,120 @@
+{
+  "class_name": "Sequential",
+  "keras_version": "2.2.2",
+  "config": [
+    {
+      "class_name": "Dense",
+      "config": {
+        "bias_initializer": {
+          "class_name": "Zeros",
+          "config": {}
+        },
+        "activity_regularizer": null,
+        "dtype": "float32",
+        "trainable": true,
+        "name": "dense_1",
+        "batch_input_shape": [
+          null,
+          784
+        ],
+        "kernel_constraint": null,
+        "activation": "relu",
+        "bias_regularizer": null,
+        "kernel_regularizer": null,
+        "bias_constraint": null,
+        "use_bias": true,
+        "kernel_initializer": {
+          "class_name": "RandomNormal",
+          "config": {
+            "seed": null,
+            "stddev": 0.05,
+            "mean": 0
+          }
+        },
+        "units": 784
+      }
+    },
+    {
+      "class_name": "Dense",
+      "config": {
+        "bias_initializer": {
+          "class_name": "Zeros",
+          "config": {}
+        },
+        "activity_regularizer": null,
+        "trainable": true,
+        "kernel_regularizer": null,
+        "use_bias": true,
+        "kernel_constraint": null,
+        "activation": "relu",
+        "bias_regularizer": null,
+        "kernel_initializer": {
+          "class_name": "RandomNormal",
+          "config": {
+            "seed": null,
+            "stddev": 0.05,
+            "mean": 0
+          }
+        },
+        "bias_constraint": null,
+        "name": "dense_2",
+        "units": 200
+      }
+    },
+    {
+      "class_name": "Dense",
+      "config": {
+        "bias_initializer": {
+          "class_name": "Zeros",
+          "config": {}
+        },
+        "activity_regularizer": null,
+        "trainable": true,
+        "kernel_regularizer": null,
+        "use_bias": true,
+        "kernel_constraint": null,
+        "activation": "relu",
+        "bias_regularizer": null,
+        "kernel_initializer": {
+          "class_name": "RandomNormal",
+          "config": {
+            "seed": null,
+            "stddev": 0.05,
+            "mean": 0
+          }
+        },
+        "bias_constraint": null,
+        "name": "dense_3",
+        "units": 50
+      }
+    },
+    {
+      "class_name": "Dense",
+      "config": {
+        "bias_initializer": {
+          "class_name": "Zeros",
+          "config": {}
+        },
+        "activity_regularizer": null,
+        "trainable": true,
+        "kernel_regularizer": null,
+        "use_bias": true,
+        "kernel_constraint": null,
+        "activation": "sigmoid",
+        "bias_regularizer": null,
+        "kernel_initializer": {
+          "class_name": "RandomNormal",
+          "config": {
+            "seed": null,
+            "stddev": 0.05,
+            "mean": 0
+          }
+        },
+        "bias_constraint": null,
+        "name": "dense_4",
+        "units": 10
+      }
+    }
+  ],
+  "backend": "tensorflow"
+}

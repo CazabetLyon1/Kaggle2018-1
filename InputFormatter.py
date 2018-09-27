@@ -6,8 +6,13 @@ import numpy
 # Input.shape : (n, x, y,)
 # Output.shape : (n, x*y,)
 def to_normalized_vector_list(images):
-    pixels_qt = images.shape[1] * images.shape[2]  # Compute x*y
-    return images.reshape(images.shape[0], pixels_qt) / 255  # Flatten & normalize
+    if len(images.shape) == 2:
+        return images/255
+    elif len(images.shape) == 3:
+        pixels_qt = images.shape[1] * images.shape[2]            # Compute x*y
+        return images.reshape(images.shape[0], pixels_qt) / 255  # Flatten & normalize
+    else:
+        return  # TODO Handle unexpected shape
 
 
 # Reconstitute an array of square image from an array of pixels vectors
