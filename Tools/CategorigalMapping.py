@@ -34,9 +34,3 @@ class CategoricalMapping(object):
             return  # TODO Handle wrong input shape error
 
         return self.labels[int(numpy.argmax(cat))]
-
-
-# CategoricalMapping w\ labels [0, 1, ... 9] as integers
-class DecimalDigitMapping(CategoricalMapping):
-    def __init__(self):
-        super(DecimalDigitMapping, self).__init__(range(10))

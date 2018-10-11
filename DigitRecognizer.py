@@ -11,12 +11,12 @@ from Tools.Plotting import plot_images_test_results, plot_images_predictions
 from InputFormatter import to_drawable_images
 from Predictions import TestPredictions, Predictions
 from Models.ModelIO import load_model, save_model
+from Tools.CategorigalMapping import CategoricalMapping
 
 
 # Customizable import statements
 from Data.Challenge1 import DataIO                                  # Challenge1 data loading & saving
 from InputFormatter import to_normalized_images as input_formatter  # Format inputs to 0<=(n, 28, 28,)<=1
-from OutputFormatter import DecimalDigitMapping as OutputMapping    # [0...9] Categorical encoder (for output mapping)
 
 from Models.Challenge1.CNN2D_1 import Compiler                      # Import a compiler for the model
 model_name = 'Challenge1/CNN2D_1'
@@ -149,9 +149,9 @@ def evaluate(nn, test_images, test_labels):
 
 # Process entry point
 def main():
-    cat_mapping = OutputMapping()                               # Create an output encoder/decoder
-    images, labels = DataIO.load_training_data()                # Load the data
-    dataset = DataSet(*DataSet.split_set(images, labels, 0.2))  # Instantiate the DataSet
+    cat_mapping = CategoricalMapping(DataIO.get_output_categories())  # Create an output encoder/decoder
+    images, labels = DataIO.load_training_data()                      # Load the data
+    dataset = DataSet(*DataSet.split_set(images, labels, 0.2))        # Instantiate the DataSet
 
     # Encode the DataSet
     encoded_dataset = dataset.encode(images_encoding_fct=lambda images: input_formatter(images),
