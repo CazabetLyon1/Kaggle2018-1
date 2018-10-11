@@ -17,7 +17,7 @@ def load_training_data():
 
 
 # Load the examination data (without labels)
-# Return.shape : (28001, 784,)
+# Return.shape : (28000, 784,)
 def load_prediction_data():
     read = pandas.read_csv('{0}test.csv'.format(path))  # Load the csv
     images = numpy.array(read)                          # Extract all images
@@ -27,8 +27,13 @@ def load_prediction_data():
 
 
 # Export results as specified by the challenge rules
-# param.shape : (28001,)
+# param.shape : (28000,)
 def save_submission(results, file_name='Submission_new'):
     results = pandas.Series(results, name='Label')                                                 # Cast results
     submission = pandas.concat([pandas.Series(range(1, 28001), name='ImageId'), results], axis=1)  # Put image indices
     submission.to_csv('{0}{1}.csv'.format(path, file_name), index=False)                           # Save submission
+
+
+# Return the available output space [0, 1, 2, ... 9]
+def get_output_categories():
+    return range(10)

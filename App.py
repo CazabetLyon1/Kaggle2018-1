@@ -11,15 +11,15 @@ from Tools.Plotting import plot_images_test_results, plot_images_predictions
 from InputFormatter import to_drawable_images
 from Predictions import TestPredictions, Predictions
 from Models.ModelIO import load_model, save_model
+from Tools.CategorigalMapping import CategoricalMapping
 
 
 # Customizable import statements
-from Data.Challenge1 import DataIO                                  # Challenge1 data loading & saving
+from Data.Other.A_Z_Handwritten import DataIO                       # A_Z data loading
 from InputFormatter import to_normalized_images as input_formatter  # Format inputs to 0<=(n, 28, 28,)<=1
-from OutputFormatter import DecimalDigitMapping as OutputMapping    # [0...9] Categorical encoder (for output mapping)
+from Models.Other.A_Z_Handwritten.CNN2D_1 import Compiler           # Import a compiler for the model
 
-from Models.Challenge1.CNN2D_1 import Compiler                      # Import a compiler for the model
-model_name = 'Challenge1/CNN2D_1'
+model_name = 'Other/A_Z_Handwritten/CNN2D_1'
 network_name = 'Main'
 load_network = False
 save_network = True
@@ -149,9 +149,9 @@ def evaluate(nn, test_images, test_labels):
 
 # Process entry point
 def main():
-    cat_mapping = OutputMapping()                               # Create an output encoder/decoder
-    images, labels = DataIO.load_training_data()                # Load the data
-    dataset = DataSet(*DataSet.split_set(images, labels, 0.2))  # Instantiate the DataSet
+    cat_mapping = CategoricalMapping(DataIO.get_output_categories())  # Create an output encoder/decoder
+    images, labels = DataIO.load_training_data()                      # Load the data
+    dataset = DataSet(*DataSet.split_set(images, labels, 0.2))        # Instantiate the DataSet
 
     # Encode the DataSet
     encoded_dataset = dataset.encode(images_encoding_fct=lambda images: input_formatter(images),
@@ -165,17 +165,17 @@ def main():
     train_model(nn, encoded_dataset, 50, 2048, True, True)                  # Train the model
     evaluate(nn, encoded_dataset.test_images, encoded_dataset.test_labels)  # Evaluate the model
 
-    # Make predictions on the test data
+    # Make predictions on the Validation data
     predictions = TestPredictions(encoded_dataset.test_images, dataset.test_labels)  # Load predictions
     predict(nn, cat_mapping, predictions)                                            # Make predictions
     visual_confirmation(predictions)                                                 # Plot sample of predictions
 
     # Make predictions on the challenge data
-    predictions = Predictions(input_formatter(DataIO.load_prediction_data()))  # Load predictions
-    predict(nn, cat_mapping, predictions, False)                               # Make predictions
-    visual_confirmation(predictions)                                           # Plot sample of predictions
+    #predictions = Predictions(input_formatter(DataIO.load_prediction_data()))  # Load predictions
+    #predict(nn, cat_mapping, predictions, False)                               # Make predictions
+    #visual_confirmation(predictions)                                           # Plot sample of predictions
 
-    DataIO.save_submission(predictions.results)  # Save the result into the correct submission format
+    #DataIO.save_submission(predictions.results)  # Save the result into the correct submission format
 
     if save_network:
         save_model(nn, 'Models/{}/'.format(model_name), network_name)  # Save model + (opt) network
