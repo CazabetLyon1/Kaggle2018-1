@@ -1,7 +1,15 @@
-## Sujet : https://www.kaggle.com/c/digit-recognizer ##
-## Langage : Python3 ##
----------------
+## Kaggle Challenges ##
+
+
+| Configuration | Version  | Source  |
+| :-----------: |:--------:| :-----: |
+| Challenge1    | 908d588e | [digit-recognizer](https://www.kaggle.com/c/digit-recognizer) |
+| ['A'-'Z']     | centered | [az-handwritten-alphabets-in-csv-format](https://www.kaggle.com/sachinpatel21/az-handwritten-alphabets-in-csv-format) |
+| Challenge2    |   soon   | [quickdraw-doodle-recognition](https://www.kaggle.com/c/quickdraw-doodle-recognition) |
+
+
 Dépendances :
-* matlab
 * keras (+tensorflow)
+* numpy
+* pandas
 
