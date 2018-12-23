@@ -5,6 +5,7 @@ from keras.models import model_from_json
 def load_model(path, network_name=None):
     loaded_model_json = None                                    # Initialise empty var
     with open('{0}Model.json'.format(path), 'r') as json_file:  # Try to open file
+        print('loading model: {}'.format(path))
         loaded_model_json = json_file.read()                    # Load data
         json_file.close()                                       # Free file
 
@@ -14,6 +15,7 @@ def load_model(path, network_name=None):
     loaded_model = model_from_json(loaded_model_json)           # De-serialize model
 
     if network_name is not None:
+        print('loading network: {}'.format(network_name))
         loaded_model.load_weights('{0}{1}.h5'.format(path, network_name))  # Load the network weights
 
     return loaded_model

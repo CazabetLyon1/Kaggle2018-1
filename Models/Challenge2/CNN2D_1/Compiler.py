@@ -1,10 +1,11 @@
-from keras.optimizers import RMSprop
+from keras.optimizers import Adam
+from keras.losses import categorical_crossentropy
+from keras.metrics import categorical_accuracy
 
 
 # Compile the CNN2D_1 model with it's intended compilation options
 def compile_model(model):
-    optimizer = RMSprop(lr=0.001, rho=0.9, epsilon=1e-08, decay=0.0)  # Tweak the optimizer
-
-    model.compile(optimizer=optimizer, loss="categorical_crossentropy", metrics=["accuracy"])  # Compile model
+    model.compile(optimizer=Adam(lr=0.0024), loss='categorical_crossentropy',
+                  metrics=[categorical_crossentropy, categorical_accuracy])
 
     return model

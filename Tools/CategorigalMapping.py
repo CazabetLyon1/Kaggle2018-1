@@ -27,10 +27,14 @@ class CategoricalMapping(object):
         return self.label_to_cat_translation_dict.get(label)
 
     # Convert a category to the corresponding label
-    def to_label(self, cat):
+    def to_label(self, cat, labels_qt = 1):
         if type(cat) is not numpy.ndarray:
             cat = numpy.array(cat)  # Try to cast (solve potential list type errors]
         if len(cat) != self.labels_qt:
             return  # TODO Handle wrong input shape error
 
-        return self.labels[int(numpy.argmax(cat))]
+        if labels_qt == 1:
+            return self.labels[int(numpy.argmax(cat))]
+        else:
+            indices = cat.argsort()[-labels_qt:][::-1]
+            return [self.labels[val] for val in indices]

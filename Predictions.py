@@ -83,7 +83,7 @@ class TestPredictions(Predictions):
         # Compute value if cache not set (first call)
         if self.correct is None:
             #  Get the indices of all correct predictions
-            correct_indices = list(filter(lambda i: self.results[i] == self.expected[i],
+            correct_indices = list(filter(lambda i: np.argmax(self.results[i]) == np.argmax(self.expected[i]), 
                                           list(range(self.images.shape[0]))))
             #  Update the cache
             self.correct = self.filter_by_indices(correct_indices)  # Apply filter
@@ -101,7 +101,7 @@ class TestPredictions(Predictions):
         # Compute value if cache not set (first call)
         if self.incorrect is None:
             #  Get the indices of all incorrect predictions
-            incorrect_indices = list(filter(lambda i: self.results[i] != self.expected[i],
+            incorrect_indices = list(filter(lambda i: np.argmax(self.results[i]) != np.argmax(self.expected[i]),
                                             list(range(self.images.shape[0]))))
             #  Update the cache
             self.incorrect = self.filter_by_indices(incorrect_indices)

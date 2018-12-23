@@ -2,5 +2,6 @@
 .settings
 .log
 *.py[cod]
+*.ipynb
 
 .idea/
